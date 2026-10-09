@@ -13,6 +13,24 @@ const preview = {
 
   decorators: [
     (Story, context) => {
+      // 1. Peek at the raw data returned by the story function
+      const rawStoryFn = context.originalStoryFn;
+      const storyData = typeof rawStoryFn === 'function' 
+        ? rawStoryFn(context.args, context) 
+        : Story();
+
+      // 2. Identify if this is an official Pixi story structure
+      const isPixiStory = storyData && (
+        typeof storyData.init === 'function' || 
+        (storyData.view && typeof storyData.view === 'object')
+      );
+
+      // 3. MODE A: If normal React component, bypass Pixi completely!
+      if (!isPixiStory) {
+        return <Story />;
+      }
+
+      // 4. MODE B: If it is an official Pixi story, run in isolated canvas
       const containerRef = useRef(null);
 
       useEffect(() => {
@@ -22,13 +40,6 @@ const preview = {
 
         const initContainerStory = async () => {
           if (!containerRef.current) return;
-
-          const rawStoryFn = context.originalStoryFn;
-          const storyData = typeof rawStoryFn === 'function' 
-            ? rawStoryFn(context.args, context) 
-            : Story();
-
-          if (!storyData || typeof storyData !== 'object') return;
 
           const { Application, Container } = await import('pixi.js');
           const globalPixiArgs = context.parameters?.pixi?.applicationOptions || {};
@@ -43,11 +54,8 @@ const preview = {
             ...globalPixiArgs,
           });
 
-          // If the effect was cleaned up while app.init was running, destroy it immediately
           if (isDestroyed) {
-            if (app) {
-              app.destroy(true, { children: true, texture: true });
-            }
+            if (app) app.destroy(true, { children: true, texture: true });
             return;
           }
 
