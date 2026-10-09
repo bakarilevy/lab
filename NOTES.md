@@ -121,6 +121,26 @@ mkdir <resource-name> && cd <resource-name>
 npx nx generate @nx/nest:resource <resource-name>
 ```
 
+### Storybook
+
+```sh
+# Add Storybook plugin for Nx
+# If needed run: npx nx g @nx/storybook:migrate-9
+nx add @nx/storybook
+
+# Generate config for app
+nx g @nx/storybook:configuration <project-name>
+
+# Run storybook
+nx storybook <project-name>
+
+# Build static Storybook
+nx build-storybook <project-name>
+
+# Run Storybook tests
+nx test-storybook <project-name>
+```
+
 ### Infrastructure
 
 See active Nx projects:
