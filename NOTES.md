@@ -132,6 +132,7 @@ nx add @nx/storybook
 nx g @nx/storybook:configuration <project-name>
 
 # Run storybook
+# Run pixi storybook: nx storybook web --config-dir=apps/web/.storybook-pixi
 nx storybook <project-name>
 
 # Build static Storybook
