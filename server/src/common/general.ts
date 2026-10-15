@@ -36,7 +36,7 @@ export enum PaginationOptions {
 // Default rate limit options
 export enum RateLimitDefaultOptions {
     ONE_SECOND = 1000,
-    ONE_MINUTE = 6000,
+    ONE_MINUTE = 60000,
     LIMIT = 100,
 }
 
